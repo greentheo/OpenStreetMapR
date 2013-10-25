@@ -1,0 +1,67 @@
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+
+
+	<div id="OSMMapID"></div>
+
+
+	<script>
+
+
+
+		var geoJSONSet = theRgeneratedgeoJSON;
+
+		var map;
+		var ajaxRequest;
+		var plotlist;
+		var plotlayers=[];
+		var mapID="#OSMMapID";
+
+		$(document).ready(function(){
+			$(mapID).height($(window).height()-20);
+	  		$(mapID).width($(window).width()-20);
+			initmap();
+		});
+
+		$(window).resize(function(){
+			$(mapID).val('');
+			$(mapID).height($(window).height()-20);
+	  		$(mapID).width($(window).width()-20);
+			initmap();
+		});
+		function initmap() {
+			// set up the map
+			map = new L.Map('OSMMapID');
+
+			// create the tile layer with correct attribution
+			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			var osmAttrib='Map data © OpenStreetMap contributors';
+			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 19, attribution: osmAttrib});		
+
+			// start the map in South-East England
+			map.setView(new L.LatLng(mapCenterLat, mapCenterLong), mapZoomLevel);
+			map.addLayer(osm);	
+
+			//add the geo points
+			L.geoJson(geoJSONSet, {
+				pointToLayer: function(feature, latlng){
+					return L.circleMarker(latlng, {
+					radius: feature.properties.size,
+					fillColor: feature.properties.color,
+					color: "#000",
+					weight: 1,
+					opacity: 1,
+					fillOpacity: 0.8
+				}).bindPopup(feature.properties.popupContent);
+
+				}
+
+			}).addTo(map);
+		}
+
+	</script>

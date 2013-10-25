@@ -1,0 +1,10 @@
+base
+datasets
+graphics
+grDevices
+knitr
+methods
+OpenStreetMapR
+RJSONIO
+stats
+utils

@@ -1,0 +1,1487 @@
+<html>
+
+<head>
+<style type="text/css">
+.knitr.inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+},
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0em 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #f5f5f5;
+}
+.rimage.left {
+  text-align: left;
+}
+.rimage.right {
+  text-align: right;
+}
+.rimage.center {
+  text-align: center;
+}
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+</style>
+<title>R HTML Example</title>
+</head>
+
+<body>
+<p> Open StreetMapR is designes to work either interactively with plots or interactively within an RMarkdown document.  Reporting and reproducible research at it's best!</p>
+
+Let's take a look at a dataset.
+
+<div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r"><span class="hl kwd">library</span><span class="hl std">(OpenStreetMapR)</span>
+</pre></div>
+<div class="message"><pre class="knitr r">## Loading required package: RJSONIO
+</pre></div>
+<div class="source"><pre class="knitr r"><span class="hl std">df</span> <span class="hl kwb">=</span> <span class="hl kwd">data.frame</span><span class="hl std">(</span><span class="hl kwc">lat</span> <span class="hl std">=</span> <span class="hl kwd">runif</span><span class="hl std">(</span><span class="hl num">100</span><span class="hl std">,</span> <span class="hl num">38</span><span class="hl std">,</span> <span class="hl num">40</span><span class="hl std">),</span> <span class="hl kwc">long</span> <span class="hl std">=</span> <span class="hl opt">-</span><span class="hl kwd">runif</span><span class="hl std">(</span><span class="hl num">100</span><span class="hl std">,</span> <span class="hl num">104</span><span class="hl std">,</span> <span class="hl num">106</span><span class="hl std">),</span> <span class="hl kwc">size</span> <span class="hl std">=</span> <span class="hl kwd">runif</span><span class="hl std">(</span><span class="hl num">100</span><span class="hl std">)</span> <span class="hl opt">*</span>
+    <span class="hl num">20</span><span class="hl std">,</span> <span class="hl kwc">color</span> <span class="hl std">=</span> <span class="hl kwd">sample</span><span class="hl std">(</span><span class="hl kwd">rainbow</span><span class="hl std">(</span><span class="hl num">10</span><span class="hl std">),</span> <span class="hl num">100</span><span class="hl std">,</span> <span class="hl kwc">replace</span> <span class="hl std">= T))</span>
+<span class="hl kwd">head</span><span class="hl std">(df)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##     lat   long   size     color
+## 1 39.36 -105.9  5.077 #FF9900FF
+## 2 38.47 -105.4 15.088 #3300FFFF
+## 3 38.02 -105.0 17.588 #CCFF00FF
+## 4 38.68 -105.7 11.793 #CCFF00FF
+## 5 39.51 -104.3 12.840 #FF9900FF
+## 6 38.51 -105.5  2.744 #33FF00FF
+</pre></div>
+</div></div>
+
+
+You can plot this in a window easily with
+
+<div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r"># plot(OSMMap(df) plot(OSMMap(df, size='size', color='color'))
+</pre></div>
+</div></div>
+
+
+but we can also plot it as part of this document, inline with results, just make sure to specify the plot height (default width is full screen).
+
+<div class="source"><pre class="knitr r"><span class="hl std">(</span><span class="hl kwd">print</span><span class="hl std">(</span><span class="hl kwd">OSMMap</span><span class="hl std">(df,</span> <span class="hl kwc">size</span> <span class="hl std">=</span> <span class="hl str">&quot;size&quot;</span><span class="hl std">,</span> <span class="hl kwc">color</span> <span class="hl std">=</span> <span class="hl str">&quot;color&quot;</span><span class="hl std">)))</span>
+</pre></div>
+<div class="warning"><pre class="knitr r">## Warning: incomplete final line found on
+## '/Library/Frameworks/R.framework/Versions/3.0/Resources/library/OpenStreetMapR/OSMPrintBrew.brew.html'
+</pre></div>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+ 
+   <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+ 
+ 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+ 	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+ 
+ 
+ 
+ 	<div id="OSMMap8194"></div>
+ 
+ 
+ 	<script>
+ 
+ 
+ 
+ 		var geoJSONSet = {
+ "type": "FeatureCollection",
+"features": [
+ {
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.94, 39.358 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 5.0775 
+},
+"id": 1 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.39, 38.466 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 15.088 
+},
+"id": 2 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.97, 38.018 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 17.588 
+},
+"id": 3 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.69, 38.678 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 11.793 
+},
+"id": 4 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.31, 39.511 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size":  12.84 
+},
+"id": 5 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.49,  38.51 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 2.7435 
+},
+"id": 6 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.24, 39.421 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size": 1.4258 
+},
+"id": 7 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.91, 38.128 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 1.2969 
+},
+"id": 8 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.02, 38.006 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 19.011 
+},
+"id": 9 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.09, 38.081 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 19.943 
+},
+"id": 10 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.57, 39.209 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size":  15.73 
+},
+"id": 11 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.38, 39.351 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 3.8056 
+},
+"id": 12 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.94, 38.846 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 7.7504 
+},
+"id": 13 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.63, 38.602 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 5.6569 
+},
+"id": 14 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.6, 38.087 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 12.222 
+},
+"id": 15 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.05, 39.407 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size":  3.351 
+},
+"id": 16 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.51, 39.694 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size":   8.94 
+},
+"id": 17 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.41, 39.867 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 9.5748 
+},
+"id": 18 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.26, 38.139 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 13.592 
+},
+"id": 19 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.87, 38.044 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 0.11827 
+},
+"id": 20 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.6, 38.436 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 3.8931 
+},
+"id": 21 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.44, 38.166 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 0.60967 
+},
+"id": 22 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.16, 39.321 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size": 17.006 
+},
+"id": 23 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.86, 38.444 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 11.446 
+},
+"id": 24 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.62, 39.086 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 3.4252 
+},
+"id": 25 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.77, 38.621 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 19.301 
+},
+"id": 26 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.3, 39.711 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 13.063 
+},
+"id": 27 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.97, 39.417 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size": 4.5148 
+},
+"id": 28 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.57, 39.798 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 5.2257 
+},
+"id": 29 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.72, 38.201 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 3.8042 
+},
+"id": 30 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.95, 38.735 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 8.2245 
+},
+"id": 31 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.21, 38.342 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 0.017787 
+},
+"id": 32 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.93, 38.758 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 6.3225 
+},
+"id": 33 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.46,  38.89 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 18.371 
+},
+"id": 34 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.59, 39.884 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size":  15.67 
+},
+"id": 35 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.67, 39.261 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 0.79701 
+},
+"id": 36 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.17, 38.389 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 6.9825 
+},
+"id": 37 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.38,  38.05 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 19.425 
+},
+"id": 38 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.84,  39.54 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 6.5291 
+},
+"id": 39 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.57, 38.101 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 12.958 
+},
+"id": 40 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.43, 38.831 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 1.2156 
+},
+"id": 41 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.31, 38.989 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 6.3487 
+},
+"id": 42 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.97, 38.131 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 16.256 
+},
+"id": 43 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.49, 38.019 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 18.425 
+},
+"id": 44 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.3, 39.461 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 15.372 
+},
+"id": 45 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.87,  38.95 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 5.1642 
+},
+"id": 46 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.99,  39.17 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 10.176 
+},
+"id": 47 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.48, 38.562 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 17.117 
+},
+"id": 48 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.64, 38.494 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 3.3065 
+},
+"id": 49 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.21, 39.169 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size":  10.35 
+},
+"id": 50 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.69, 39.689 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size": 8.8838 
+},
+"id": 51 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.64, 38.571 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 9.6221 
+},
+"id": 52 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.93, 39.805 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 16.749 
+},
+"id": 53 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.41, 38.573 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 8.8733 
+},
+"id": 54 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.27, 38.251 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 15.441 
+},
+"id": 55 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.06, 38.706 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 13.234 
+},
+"id": 56 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.65, 39.424 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 0.6755 
+},
+"id": 57 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.52, 38.558 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size":  18.46 
+},
+"id": 58 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.18, 38.877 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 8.5886 
+},
+"id": 59 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.72, 39.379 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 8.4338 
+},
+"id": 60 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.67, 39.207 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 2.3217 
+},
+"id": 61 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.77, 38.942 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 1.7257 
+},
+"id": 62 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.28, 38.454 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size": 16.943 
+},
+"id": 63 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.4,  38.66 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 4.1072 
+},
+"id": 64 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.67,  38.95 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 19.184 
+},
+"id": 65 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.76, 39.245 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 10.749 
+},
+"id": 66 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.6, 39.293 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 15.884 
+},
+"id": 67 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.98, 39.298 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 13.553 
+},
+"id": 68 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.09, 39.195 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size": 7.9855 
+},
+"id": 69 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.81, 39.901 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 14.739 
+},
+"id": 70 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.85, 39.159 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 17.486 
+},
+"id": 71 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.94, 39.361 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 13.308 
+},
+"id": 72 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.52, 39.024 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 5.0739 
+},
+"id": 73 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.62, 38.113 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 19.872 
+},
+"id": 74 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.87, 39.328 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 9.5704 
+},
+"id": 75 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.9,  38.13 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 15.445 
+},
+"id": 76 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.56,  39.61 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 11.048 
+},
+"id": 77 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.89,  39.15 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size": 9.5528 
+},
+"id": 78 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.86, 39.431 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 9.3064 
+},
+"id": 79 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.11, 39.744 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 16.289 
+},
+"id": 80 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.68, 38.184 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CCFF00",
+"size": 10.966 
+},
+"id": 81 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.46, 39.053 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size": 15.306 
+},
+"id": 82 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.17, 39.427 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 2.2894 
+},
+"id": 83 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.4,  39.04 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#3300FF",
+"size": 0.44197 
+},
+"id": 84 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.38,  38.76 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 12.645 
+},
+"id": 85 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.64, 39.818 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size":   15.5 
+},
+"id": 86 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.97,  38.75 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#CC00FF",
+"size": 17.086 
+},
+"id": 87 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.41, 39.288 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size": 11.294 
+},
+"id": 88 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.19, 39.306 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 8.6139 
+},
+"id": 89 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.32,  39.97 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 5.2727 
+},
+"id": 90 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.23, 39.253 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size": 9.6794 
+},
+"id": 91 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.96, 39.951 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size":   17.1 
+},
+"id": 92 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.56, 38.538 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FF66",
+"size": 16.921 
+},
+"id": 93 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.87, 38.231 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size":  14.41 
+},
+"id": 94 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.15, 39.221 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0000",
+"size":  10.04 
+},
+"id": 95 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.46, 39.972 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#00FFFF",
+"size": 10.899 
+},
+"id": 96 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.38, 39.997 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#0066FF",
+"size":  16.19 
+},
+"id": 97 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.86, 38.871 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#33FF00",
+"size": 15.171 
+},
+"id": 98 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.06, 38.283 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF9900",
+"size": 2.5456 
+},
+"id": 99 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.82,   39.1 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": "#FF0099",
+"size": 7.2476 
+},
+"id": 100 
+} 
+] 
+};
+ 
+ 		var map;
+ 		var ajaxRequest;
+ 		var plotlist;
+ 		var plotlayers=[];
+ 		var mapID="#OSMMap8194";
+ 
+ 		$(document).ready(function(){
+ 			$(mapID).height($(window).height()-20);
+ 	  		$(mapID).width($(window).width()-20);
+ 			initmap();
+ 		});
+ 
+ 		$(window).resize(function(){
+ 			$(mapID).val('');
+ 			$(mapID).height($(window).height()-20);
+ 	  		$(mapID).width($(window).width()-20);
+ 			initmap();
+ 		});
+ 		function initmap() {
+ 			// set up the map
+ 			map = new L.Map('OSMMap8194');
+ 
+ 			// create the tile layer with correct attribution
+ 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+ 			var osmAttrib='Map data © OpenStreetMap contributors';
+ 			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 19, attribution: osmAttrib});		
+ 
+ 			// start the map in South-East England
+ 			map.setView(new L.LatLng(38.953910115161, -105.119418719593), 8);
+ 			map.addLayer(osm);	
+ 
+ 			//add the geo points
+ 			L.geoJson(geoJSONSet, {
+ 				pointToLayer: function(feature, latlng){
+ 					return L.circleMarker(latlng, {
+ 					radius: feature.properties.size,
+ 					fillColor: feature.properties.color,
+ 					color: "#000",
+ 					weight: 1,
+ 					opacity: 1,
+ 					fillOpacity: 0.8
+ 				}).bindPopup(feature.properties.popupContent);
+ 
+ 				}
+ 
+ 			}).addTo(map);
+ 		}
+ 
+ 	</script>
+NULL
+
+
+
+
+</body>
+</html>
+
+
+

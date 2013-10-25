@@ -1,0 +1,32 @@
+
+
+
+Test Plots with RMarkdown and OpenStreetMapR
+========================================================
+
+Open StreetMapR is designes to work either interactively with plots or interactively within an RMarkdown document.  Reporting and reproducible research at it's best!
+
+Let's take a look at a dataset.
+
+```{r }
+library(OpenStreetMapR)
+df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
+                size=runif(100)*20, color=sample(rainbow(10), 100, replace=T))
+
+head(df)
+```
+
+You can plot this in a window easily with
+
+```{r echo=TRUE}
+#plot(OSMMap(df)
+#plot(OSMMap(df, size='size', color='color'))
+```
+
+
+But you can also include this data as part of your RMarkdown just as easily, just print the OSMap object and make sure to turn on: .
+
+```{r echo=FALSE, results='asis'}
+(print(OSMMap(df, size='size', color='color')))
+
+```
