@@ -2,10 +2,14 @@
 
 #generate rand lats and longs near Denver,CO
 
-df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
-                size=runif(100)*20, color=sample(rainbow(10), 100, replace=T))
+df = data.frame(lat=runif(10, 38,40), long=-runif(10, 104,106), 
+                size=runif(10)*20, color=sample(rainbow(3), 10, replace=T),
+                line=sample(1:3, 10,replace=T))
 
-OSMMap(df)
+plot(OSMMap(df))
 
-OSMMap(df, size='size', color='color')
+plot(OSMMap(df, size='size', color='color'))
+
+linePlot = OSMMap(df, line='line')
+plot(linePlot)
 

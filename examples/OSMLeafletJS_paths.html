@@ -1,0 +1,116 @@
+<head>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<!--[if lte IE 8]>
+	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+	<![endif]-->
+
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+	
+
+</head>
+
+<body>
+	<div id="map"></div>
+
+
+	<script>
+
+		var geoJSONSet  = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": "This is a B-Cycle Station. Come pick up a bike and pay by the hour. What a deal!",
+                "color":"#0000FF",
+                "size": 8
+            },
+            "id": 51
+        },
+        {
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[-101, 42], [-103, 43], [-110, 55]]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": "This is a B-Cycle Station. Come pick up a bike and pay by the hour. What a deal!",
+                "color":"#FF00FF",
+                "size": 12
+            },
+            "id": 52
+        },
+        {
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[-103, 40], [-105, 47], [-112, 53]]
+                
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": "This is a B-Cycle Station. Come pick up a bike and pay by the hour. What a deal!",
+                "color": "#00FFFF",
+                "size": 20
+            },
+            "id": 54
+        }
+    ]
+};
+
+
+
+		var map;
+		var ajaxRequest;
+		var plotlist;
+		var plotlayers=[];
+
+		$(document).ready(function(){
+			$('#map').height($(window).height()-20);
+	  		$('#map').width($(window).width()-20);
+			initmap();
+		});
+
+		$(window).resize(function(){
+			$('#map').val('');
+			$('#map').height($(window).height()-20);
+	  		$('#map').width($(window).width()-20);
+			initmap();
+		});
+		function initmap() {
+			// set up the map
+			map = new L.Map('map');
+
+			// create the tile layer with correct attribution
+			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			var osmAttrib='Map data © OpenStreetMap contributors';
+			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 20, attribution: osmAttrib});		
+
+			// start the map in South-East England
+			map.setView(new L.LatLng(39.74739, -105),13);
+			map.addLayer(osm);	
+
+			//add the geo points
+			L.geoJson(geoJSONSet, {
+				onEachFeature: function(feature, layer){
+					return L.polyline(feature.geometry.coordinates, {
+					color: feature.properties.color
+				});
+
+				}
+
+			}).addTo(map);
+			
+		
+		}
+
+
+	</script>
+</body>

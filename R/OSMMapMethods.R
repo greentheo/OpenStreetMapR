@@ -2,7 +2,7 @@
 #' @export
 print.OSMMap <- function(x, tag=NULL, file="", ...){
   
-  #html = readLines('inst//OSMPrintBrew.brew.html')
+  html = readLines('inst//OSMPrintBrew.brew.html')
   html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPrintBrew.brew.html'))
   html = paste0(html, '\n')
   mapID = paste0('OSMMap',round(runif(1)*10000))
@@ -36,8 +36,6 @@ OSMMap.httpd.handler <- function(path, query, ...) {
 #' The plot method for taking the OSMMap and putting it in a web browser
 #' @export
 plot.OSMMap <- function(x, ...){
-  
-  
     
     if(!isServerRunning() ) {
       tools:::startDynamicHelp()
@@ -50,8 +48,8 @@ plot.OSMMap <- function(x, ...){
     ## Write the whole visualisation into a html file
     if('OSMMap' %in% class(x)){          
       ## Write the pure chart html code into a separate file
-      #html = readLines('inst//OSMPlotBrew.brew.html')
-      html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'))
+      html = readLines('inst//OSMPlotBrew.brew.html')
+      #html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'))
       html = paste0(html, '\n')
       mapID = paste0('OSMMap',round(runif(1)*10000))
       html = gsub('OSMMapID',mapID, html)

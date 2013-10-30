@@ -52,21 +52,42 @@
 			map.setView(new L.LatLng(mapCenterLat, mapCenterLong), mapZoomLevel);
 			map.addLayer(osm);	
 
-			//add the geo points
-			L.geoJson(geoJSONSet, {
-				pointToLayer: function(feature, latlng){
-					return L.circleMarker(latlng, {
-					radius: feature.properties.size,
-					fillColor: feature.properties.color,
-					color: "#000",
-					weight: 1,
-					opacity: 1,
-					fillOpacity: 0.8
-				}).bindPopup(feature.properties.popupContent);
+			var layers={};
+			$.each(geoJSONSet, function(i, item){
+				//add the geo points
+				layers[item.layer]=L.geoJson(item.data, {
 
-				}
+					onEachFeature: function(feature, layer){
+						
+						switch (feature.geometry.type){
+							case "Point": 
+							(function(){
+								return L.circleMarker(feature.geometry.coordinates, {
+									radius: feature.properties.size,
+									fillColor: feature.properties.color,
+									color: "#000",
+									weight: 1,
+									opacity: 1,
+									fillOpacity: 0.8			
+								}).bindPopup(feature.properties.popupContent);
+							})();
+							break;
+							case "LineString": 
+							(function(){
+								return L.polyline(feature.geometry.coordinates, {
+									color: feature.properties.color
+								});
+							})(); 
+							break;
+						}
+					}
 
-			}).addTo(map);
+				});
+				
+			});
+			//add the layers to the map
+			
+			L.control.layers(null, layers).addTo(map);
 		}
 
 
