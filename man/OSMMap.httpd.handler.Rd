@@ -1,10 +1,24 @@
 \name{OSMMap.httpd.handler}
 \alias{OSMMap.httpd.handler}
-\title{When plotting the map this funciton handles the export}
+\title{isServerRunning}
 \usage{
-  OSMMap.httpd.handler(path, query, ...)
+  OSMMap.httpd.handler(path, query)
+}
+\arguments{
+  \item{path}{a path to run the webserver in}
+
+  \item{query}{not used}
+
+  \item{...}{additional arguments}
 }
 \description{
-  When plotting the map this funciton handles the export
+  Setup the R webserver properly.
+}
+\details{
+  OpenStreetMap Internal Function for handling http
+  requests
+}
+\author{
+  Theo Van Rooy <theo
 }
 

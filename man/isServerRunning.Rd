@@ -1,10 +1,16 @@
 \name{isServerRunning}
 \alias{isServerRunning}
-\title{checks to see if the R server is running}
+\title{isServerRunning}
 \usage{
   isServerRunning()
 }
 \description{
-  checks to see if the R server is running
+  Check to the see if the R server is running.
+}
+\details{
+  OpenStreetMap Internal Function
+}
+\author{
+  Theo Van Rooy <theo
 }
 

@@ -1,11 +1,23 @@
 \name{plot.OSMMap}
+\alias{plot}
 \alias{plot.OSMMap}
-\title{The plot method for taking the OSMMap and putting it in a web browser}
+\title{plot.OSMMap}
 \usage{
-  plot.OSMMap(x, ...)
+  plot(x,...)
+}
+\arguments{
+  \item{x}{is an OSMMap object resulting from the call to
+  OSMMap or addLayers}
+
+  \item{...}{further plotting arguments}
 }
 \description{
-  The plot method for taking the OSMMap and putting it in a
-  web browser
+  Plot the OSMMap Object on an HTML page and display it.
+}
+\details{
+  OpenStreetMap Plotting for standalone usage.
+}
+\author{
+  Theo Van Rooy <theo
 }
 

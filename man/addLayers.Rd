@@ -1,8 +1,8 @@
-\name{addLayer}
-\alias{addLayer}
-\title{OSMMap}
+\name{addLayers}
+\alias{addLayers}
+\title{addLayers}
 \usage{
-  addLayer(OSMMap1, OSMMap2)
+  addLayers(OSMMap1, OSMMap2)
 }
 \arguments{
   \item{OSMMap1}{a map object resulting from the call to
@@ -18,7 +18,13 @@
 \details{
   OpenStreetMap Layer adding function
 }
+\examples{
+\dontrun{
+dualMap = (addLayers(OSMMap(df, size='size', color='color'),
+linePlot))
+}
+}
 \author{
-  Theo Van Rooy theo
+  Theo Van Rooy <theo
 }
 

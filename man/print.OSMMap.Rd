@@ -1,11 +1,25 @@
 \name{print.OSMMap}
+\alias{print}
 \alias{print.OSMMap}
-\title{The print method for including it as a chart in something like RMarkdown}
+\title{print.OSMMap}
 \usage{
-  print.OSMMap(x, tag = NULL, file = "", ...)
+  print(x,...)
+}
+\arguments{
+  \item{x}{an OSMMap object resulting from the call to
+  OSMMap or addLayers}
+
+  \item{...}{further arguments}
 }
 \description{
-  The print method for including it as a chart in something
-  like RMarkdown
+  print the OSMMap Object to it's corresponding HTML/JS
+  code.
+}
+\details{
+  OpenStreetMap Printing (for use in RHTML or RMarkDown
+  reports)
+}
+\author{
+  Theo Van Rooy <theo
 }
 

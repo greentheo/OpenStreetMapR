@@ -1,28 +1,53 @@
-#' The print method for including it as a chart in something like RMarkdown
-#' @export
-print.OSMMap <- function(x, tag=NULL, file="", ...){
+#print <- function(OSMMap) UseMethod("print")
+
+#' OpenStreetMap Printing (for use in RHTML or RMarkDown reports)
+#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @description print the OSMMap Object to it's corresponding HTML/JS code.
+#' @usage print(x,...)
+#' @aliases print
+#' @param x an OSMMap object resulting from the call to OSMMap or addLayers
+#' @param ... further arguments
+#' @method  print OSMMap
+# @S3method OSMMap print
+# @example examples/inSessionPlot.R
+#' @export 
+#' @import RJSONIO
+#' @title print.OSMMap
+print.OSMMap <- function(x,...){
   
-  html = readLines('inst//OSMPrintBrew.brew.html')
+  OSMMap=x
+  #html = readLines('inst//OSMPrintBrew.brew.html')
   html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPrintBrew.brew.html'))
   html = paste0(html, '\n')
   mapID = paste0('OSMMap',round(runif(1)*10000))
   html = gsub('OSMMapID',mapID, html)
-  html = gsub('theRgeneratedgeoJSON', x$geoJSON, html)
-  html = gsub('mapCenterLat', x$mapCenterLat, html)
-  html = gsub('mapCenterLong', x$mapCenterLong, html)
-  html = gsub('mapZoomLevel', x$zoom, html)  
+  html = gsub('theRgeneratedgeoJSON', OSMMap$geoJSON, html)
+  html = gsub('mapCenterLat', OSMMap$mapCenterLat, html)
+  html = gsub('mapCenterLong', OSMMap$mapCenterLong, html)
+  html = gsub('mapZoomLevel', OSMMap$zoom, html)  
   cat(html)
 }
 
-#' checks to see if the R server is running
-#' @export
+#' OpenStreetMap Internal Function
+#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @description Check to the see if the R server is running.
+#' @usage isServerRunning()
+#' @export 
+#' @title isServerRunning
 isServerRunning <- function() {
   tools:::httpdPort > 0L
 }
 
-#' When plotting the map this funciton handles the export 
-#' @export
-OSMMap.httpd.handler <- function(path, query, ...) {
+#' OpenStreetMap Internal Function for handling http requests
+#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @description Setup the R webserver properly.
+#' @usage OSMMap.httpd.handler(path, query)
+#' @param path a path to run the webserver in
+#' @param query not used
+#' @param ... additional arguments
+#' @export 
+#' @title isServerRunning
+OSMMap.httpd.handler <- function(path, query,...) {
   path <- gsub("^/custom/OpenStreetMapR/", "", path)
   f <- sprintf("%s%s%s",
                tempdir(),
@@ -32,11 +57,24 @@ OSMMap.httpd.handler <- function(path, query, ...) {
        "content-type"="text/html",
        "status code"=200L)
 }
+#plot <- function(OSMMap) UseMethod("plot")
 
-#' The plot method for taking the OSMMap and putting it in a web browser
-#' @export
-plot.OSMMap <- function(x, ...){
-    
+#' OpenStreetMap Plotting for standalone usage.
+#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @description Plot the OSMMap Object on an HTML page and display it.
+#' @usage plot(x,...)
+#' @aliases plot
+#' @method plot OSMMap
+# @S3method OSMMap plot
+#' @param x is an OSMMap object resulting from the call to OSMMap or addLayers
+#' @param ... further plotting arguments
+# @example examples/inSessionPlot.R
+#' @export 
+#' @import RJSONIO
+#' @title plot.OSMMap
+#' 
+plot.OSMMap <- function(x,...){
+  OSMMap=x
     if(!isServerRunning() ) {
       tools:::startDynamicHelp()
     }
@@ -46,17 +84,17 @@ plot.OSMMap <- function(x, ...){
     root.dir <- tempdir()
     
     ## Write the whole visualisation into a html file
-    if('OSMMap' %in% class(x)){          
+    if('OSMMap' %in% class(OSMMap)){          
       ## Write the pure chart html code into a separate file
-      html = readLines('inst//OSMPlotBrew.brew.html')
-      #html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'))
+      #html = readLines('inst//OSMPlotBrew.brew.html')
+      html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'))
       html = paste0(html, '\n')
       mapID = paste0('OSMMap',round(runif(1)*10000))
       html = gsub('OSMMapID',mapID, html)
-      html = gsub('theRgeneratedgeoJSON', x$geoJSON, html)
-      html = gsub('mapCenterLat', x$mapCenterLat, html)
-      html = gsub('mapCenterLong', x$mapCenterLong, html)
-      html = gsub('mapZoomLevel', x$zoom, html)  
+      html = gsub('theRgeneratedgeoJSON', OSMMap$geoJSON, html)
+      html = gsub('mapCenterLat', OSMMap$mapCenterLat, html)
+      html = gsub('mapCenterLong', OSMMap$mapCenterLong, html)
+      html = gsub('mapZoomLevel', OSMMap$zoom, html)  
       
       
       file <- file.path(root.dir, paste(mapID ,".html", sep=""))
@@ -78,44 +116,3 @@ plot.OSMMap <- function(x, ...){
  
 }
 
-
-gvisMerge <- function(x, y, horizontal=FALSE, tableOptions='border="0"',
-                      chartid){
-  
-  type="gvisMerge"
-  
-  if(any(c(missing(x), missing(y))))
-    stop("Please provide two gvis-objects as input parameters.\n")
-  
-  ## test x and y are givs objects
-  if(!any(c(inherits(x, "gvis"),   inherits(y, "gvis"))))
-    stop("x and y have to be gvis objects\n")
-  
-  if(missing(chartid)){   
-    chartid <- paste("Merged", basename(tempfile(pattern="")),sep="ID")
-  }
-  
-  htmlScaffold <- gvisHtmlWrapper(title="", chartid=chartid, dataName="various", type=type)
-  
-  output <- structure(
-    list(type=type,
-         chartid=chartid, 
-         html=list(header=htmlScaffold[["htmlHeader"]],
-                   chart=c(jsHeader=paste(x$html$chart["jsHeader"]),
-                           jsData=paste(x$html$chart["jsData"], y$html$chart["jsData"], sep="\n"),
-                           jsDrawChart=paste(x$html$chart["jsDrawChart"], y$html$chart["jsDrawChart"], sep="\n"),
-                           jsDisplayChart=paste(x$html$chart["jsDisplayChart"], y$html$chart["jsDisplayChart"], sep="\n"),
-                           jsFooter=paste(x$html$chart["jsFooter"]),
-                           jsChart=paste(x$html$chart["jsChart"], y$html$chart["jsChart"], sep="\n"),
-                           divChart= paste("\n<table ", tableOptions, ">\n<tr>\n<td>\n", x$html$chart["divChart"], "\n</td>\n",                            
-                                           ifelse(horizontal,"<td>\n","</tr>\n<tr>\n<td>\n"), y$html$chart["divChart"],
-                                           "\n</td>\n</tr>\n</table>\n", sep="")
-                   ),
-                   caption=htmlScaffold[["htmlCaption"]],
-                   footer=htmlScaffold[["htmlFooter"]]
-         )
-    ),
-    class=c("gvis", "list")
-  )
-  return(output) 
-}

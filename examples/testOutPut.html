@@ -20,7 +20,8 @@
  	<script>
  
  
- 		var geoJSONSet = {
+ 		var geoJSONSet = [
+ {
  "layer": "layer1",
 "data": {
  "type": "FeatureCollection",
@@ -28,7 +29,7 @@
  {
  "geometry": {
  "type": "Point",
-"coordinates": [ -105.94, 39.038 ] 
+"coordinates": [ -105.8, 39.807 ] 
 },
 "type": "Feature",
 "properties": {
@@ -43,7 +44,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -105.98, 39.492 ] 
+"coordinates": [ -104.32,  39.85 ] 
 },
 "type": "Feature",
 "properties": {
@@ -58,7 +59,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.28, 38.168 ] 
+"coordinates": [ -105.21,  38.61 ] 
 },
 "type": "Feature",
 "properties": {
@@ -73,7 +74,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -105.6,  39.57 ] 
+"coordinates": [ -104.27, 38.394 ] 
 },
 "type": "Feature",
 "properties": {
@@ -88,7 +89,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.64, 38.051 ] 
+"coordinates": [ -104.52, 38.704 ] 
 },
 "type": "Feature",
 "properties": {
@@ -103,7 +104,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.55, 39.476 ] 
+"coordinates": [ -104.89, 38.551 ] 
 },
 "type": "Feature",
 "properties": {
@@ -118,7 +119,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.35, 38.422 ] 
+"coordinates": [ -105.54, 39.552 ] 
 },
 "type": "Feature",
 "properties": {
@@ -133,7 +134,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -105.35, 39.312 ] 
+"coordinates": [ -105.47, 38.019 ] 
 },
 "type": "Feature",
 "properties": {
@@ -148,7 +149,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.75, 38.697 ] 
+"coordinates": [ -105.98, 39.912 ] 
 },
 "type": "Feature",
 "properties": {
@@ -163,7 +164,7 @@
 {
  "geometry": {
  "type": "Point",
-"coordinates": [ -104.61, 39.588 ] 
+"coordinates": [ -104.08, 39.494 ] 
 },
 "type": "Feature",
 "properties": {
@@ -177,9 +178,12 @@
 } 
 ] 
 } 
-};
+} 
+];
  
  		var map;
+ 		// set up the map
+ 		map = new L.Map('map', scrollWheelZooom=false);
  		var ajaxRequest;
  		var plotlist;
  		var plotlayers=[];
@@ -194,57 +198,62 @@
  			$('#map').val('');
  			$('#map').height($(window).height()-20);
  	  		$('#map').width($(window).width()-20);
- 			initmap();
+ 			
  		});
  		function initmap() {
- 			// set up the map
- 			map = new L.Map('map');
+ 			
  
  			// create the tile layer with correct attribution
  			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
  			var osmAttrib='Map data © OpenStreetMap contributors';
  			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 19, attribution: osmAttrib});		
  
+ 			baseLayer = {
+  				"Base": osm
+  			}
  			// start the map in South-East England
- 			map.setView(new L.LatLng(38.9815006267745, -105.004334290233), 8);
+ 			map.setView(new L.LatLng(39.0893709758762, -105.006620516768), 8);
  			map.addLayer(osm);	
  
  			var layers={};
  			$.each(geoJSONSet, function(i, item){
- 				//add the geo points
- 				layers[item.layer]=L.geoJson(item.data, {
- 
- 					onEachFeature: function(feature, layer){
- 						
- 						switch (feature.geometry.type){
- 							case "Point": 
- 							(function(){
- 								return L.circleMarker(feature.geometry.coordinates, {
- 									radius: feature.properties.size,
- 									fillColor: feature.properties.color,
- 									color: "#000",
- 									weight: 1,
- 									opacity: 1,
- 									fillOpacity: 0.8			
- 								}).bindPopup(feature.properties.popupContent);
- 							})();
- 							break;
- 							case "LineString": 
- 							(function(){
+  				//add the geo points
+  				switch(item.data.features[0].geometry.type){
+  					case "Point":
+ 		 				layers[item.layer]=L.geoJson(item.data, { 
+ 	 						pointToLayer: function(feature, latlng){
+ 								return L.circleMarker(latlng, {
+ 								radius: feature.properties.size,
+ 								fillColor: feature.properties.color,
+ 								color: "#000",
+ 								weight: 1,
+ 								opacity: 1,
+ 								fillOpacity: 0.8
+ 								}).bindPopup(feature.properties.popupContent);		
+ 							}		
+ 		 					});
+ 		 			break;
+ 		 			case "LineString": 
+ 		 				layers[item.layer]=L.geoJson(item.data, { 
+ 	 						onEachFeature: function(feature, layer){
  								return L.polyline(feature.geometry.coordinates, {
- 									color: feature.properties.color
- 								});
- 							})(); 
- 							break;
- 						}
- 					}
- 
- 				});
- 				
- 			});
+ 								color: feature.properties.color
+ 							});	
+ 		 					}		
+ 		 				});			
+ 		 			break;	
+ 		 		}	
+  			});
  			//add the layers to the map
+ 			layerControl = 	L.control.layers(baseLayer, layers, {
+  				collapsed: false
+  			});
+  			layerControl.addTo(map);
+  			$.each(layers, function(i, item){
+   				map.addLayer(item);
+   			});
+  			L.control.scale().addTo(map);
  			
- 			L.control.layers(null, layers).addTo(map);
  		}
  
  

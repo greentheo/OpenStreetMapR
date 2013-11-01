@@ -23,6 +23,8 @@
 		var geoJSONSet = theRgeneratedgeoJSON;
 
 		var map;
+		// set up the map
+		map = new L.Map('map', scrollWheelZooom=false);
 		var ajaxRequest;
 		var plotlist;
 		var plotlayers=[];
@@ -37,57 +39,62 @@
 			$('#map').val('');
 			$('#map').height($(window).height()-20);
 	  		$('#map').width($(window).width()-20);
-			initmap();
+			
 		});
 		function initmap() {
-			// set up the map
-			map = new L.Map('map');
+			
 
 			// create the tile layer with correct attribution
 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			var osmAttrib='Map data © OpenStreetMap contributors';
 			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 19, attribution: osmAttrib});		
 
+			baseLayer = {
+ 				"Base": osm
+ 			}
 			// start the map in South-East England
 			map.setView(new L.LatLng(mapCenterLat, mapCenterLong), mapZoomLevel);
 			map.addLayer(osm);	
 
 			var layers={};
 			$.each(geoJSONSet, function(i, item){
-				//add the geo points
-				layers[item.layer]=L.geoJson(item.data, {
-
-					onEachFeature: function(feature, layer){
-						
-						switch (feature.geometry.type){
-							case "Point": 
-							(function(){
-								return L.circleMarker(feature.geometry.coordinates, {
-									radius: feature.properties.size,
-									fillColor: feature.properties.color,
-									color: "#000",
-									weight: 1,
-									opacity: 1,
-									fillOpacity: 0.8			
-								}).bindPopup(feature.properties.popupContent);
-							})();
-							break;
-							case "LineString": 
-							(function(){
+ 				//add the geo points
+ 				switch(item.data.features[0].geometry.type){
+ 					case "Point":
+		 				layers[item.layer]=L.geoJson(item.data, { 
+	 						pointToLayer: function(feature, latlng){
+								return L.circleMarker(latlng, {
+								radius: feature.properties.size,
+								fillColor: feature.properties.color,
+								color: "#000",
+								weight: 1,
+								opacity: 1,
+								fillOpacity: 0.8
+								}).bindPopup(feature.properties.popupContent);		
+							}		
+		 					});
+		 			break;
+		 			case "LineString": 
+		 				layers[item.layer]=L.geoJson(item.data, { 
+	 						onEachFeature: function(feature, layer){
 								return L.polyline(feature.geometry.coordinates, {
-									color: feature.properties.color
-								});
-							})(); 
-							break;
-						}
-					}
-
-				});
-				
-			});
+								color: feature.properties.color
+							});	
+		 					}		
+		 				});			
+		 			break;	
+		 		}	
+ 			});
 			//add the layers to the map
+			layerControl = 	L.control.layers(baseLayer, layers, {
+ 				collapsed: false
+ 			});
+ 			layerControl.addTo(map);
+ 			$.each(layers, function(i, item){
+  				map.addLayer(item);
+  			});
+ 			L.control.scale().addTo(map);
 			
-			L.control.layers(null, layers).addTo(map);
 		}
 
 
