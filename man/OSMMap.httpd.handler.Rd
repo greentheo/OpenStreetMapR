@@ -2,7 +2,7 @@
 \alias{OSMMap.httpd.handler}
 \title{isServerRunning}
 \usage{
-  OSMMap.httpd.handler(path, query)
+  OSMMap.httpd.handler(path, query,...)
 }
 \arguments{
   \item{path}{a path to run the webserver in}

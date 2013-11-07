@@ -3,7 +3,7 @@
 \alias{print.OSMMap}
 \title{print.OSMMap}
 \usage{
-  print(x,...)
+  print.OSMMap(x,...)
 }
 \arguments{
   \item{x}{an OSMMap object resulting from the call to

@@ -3,7 +3,7 @@
 \alias{plot.OSMMap}
 \title{plot.OSMMap}
 \usage{
-  plot(x,...)
+  plot.OSMMap(x,...)
 }
 \arguments{
   \item{x}{is an OSMMap object resulting from the call to

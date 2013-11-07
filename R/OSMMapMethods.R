@@ -3,7 +3,7 @@
 #' OpenStreetMap Printing (for use in RHTML or RMarkDown reports)
 #' @author Theo Van Rooy <theo@royaltyanalytics.com>
 #' @description print the OSMMap Object to it's corresponding HTML/JS code.
-#' @usage print(x,...)
+#' @usage print.OSMMap(x,...)
 #' @aliases print
 #' @param x an OSMMap object resulting from the call to OSMMap or addLayers
 #' @param ... further arguments
@@ -35,13 +35,14 @@ print.OSMMap <- function(x,...){
 #' @export 
 #' @title isServerRunning
 isServerRunning <- function() {
+  #tools:::httpdPort > 0L
   tools:::httpdPort > 0L
 }
 
 #' OpenStreetMap Internal Function for handling http requests
 #' @author Theo Van Rooy <theo@royaltyanalytics.com>
 #' @description Setup the R webserver properly.
-#' @usage OSMMap.httpd.handler(path, query)
+#' @usage OSMMap.httpd.handler(path, query,...)
 #' @param path a path to run the webserver in
 #' @param query not used
 #' @param ... additional arguments
@@ -62,7 +63,7 @@ OSMMap.httpd.handler <- function(path, query,...) {
 #' OpenStreetMap Plotting for standalone usage.
 #' @author Theo Van Rooy <theo@royaltyanalytics.com>
 #' @description Plot the OSMMap Object on an HTML page and display it.
-#' @usage plot(x,...)
+#' @usage plot.OSMMap(x,...)
 #' @aliases plot
 #' @method plot OSMMap
 # @S3method OSMMap plot
@@ -71,12 +72,14 @@ OSMMap.httpd.handler <- function(path, query,...) {
 # @example examples/inSessionPlot.R
 #' @export 
 #' @import RJSONIO
+#' @import tools
 #' @title plot.OSMMap
 #' 
 plot.OSMMap <- function(x,...){
   OSMMap=x
     if(!isServerRunning() ) {
-      tools:::startDynamicHelp()
+      #tools:::startDynamicHelp()
+      tools::startDynamicHelp()
     }
     
     env <- get( ".httpd.handlers.env", asNamespace("tools"))
@@ -102,9 +105,10 @@ plot.OSMMap <- function(x,...){
       stop('This is not an OpenStreetMapR object!')
     }    
     cat(html, file=file)
-    cat(html, file='examples/testOutPut.html')
+    #cat(html, file='inst/examples/testOutPut.html')
     
     .url <- sprintf("http://127.0.0.1:%s/custom/OpenStreetMapR/%s",
+                    #tools:::httpdPort,
                     tools:::httpdPort,
                     basename(file))
     if(interactive()){

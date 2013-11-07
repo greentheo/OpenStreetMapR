@@ -3,7 +3,7 @@ Version: 0.1
 Date: 2013-11-01
 Title: A collection of functions for creating dynamic Open Street Maps.
 Authors@R: c(person("Theodore", "Van Rooy", email="theo@royaltyanalytics.com", role=c("aut","cre")),person( "Jon", "Saints", email="jonsaints@royaltyanalytics.com", role=c("ctb")),person( "Kent", "Hurd", email="kenth3@gmail.com", role=c("ctb")))
-Depends: R (>= 3.0.0), methods, RJSONIO, utils
+Depends: R (>= 3.0.0), methods, RJSONIO, utils, tools
 Suggests: 
 Description: This package provides the functionality to take geo data and plot it on an Open Streets Map.  Furthermore, it integrates well with RMarkdown (HTML) for reporting capabilities.
 License: GPL (>= 2)

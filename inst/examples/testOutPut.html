@@ -1,0 +1,262 @@
+<head>
+ 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+ 	<!--[if lte IE 8]>
+ 	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+ 	<![endif]-->
+ 
+ 	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+ 
+ 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+ 	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+ 
+ 	
+ 
+ </head>
+ 
+ <body>
+ 	<div id="map"></div>
+ 
+ 
+ 	<script>
+ 
+ 
+ 		var geoJSONSet = [
+ {
+ "layer": "layer1",
+"data": {
+ "type": "FeatureCollection",
+"features": [
+ {
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.61, 39.285 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 1 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.9, 39.853 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 2 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.33, 38.257 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 3 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.24, 39.568 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 4 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.39, 38.199 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 5 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.63, 39.773 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 6 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.16, 38.634 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 7 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.43, 38.712 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 8 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -105.25, 38.815 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 9 
+},
+{
+ "geometry": {
+ "type": "Point",
+"coordinates": [ -104.68,   38.9 ] 
+},
+"type": "Feature",
+"properties": {
+ "popupContent": "",
+"color": {
+ "#00FFFF": "#00FFFF" 
+},
+"size":      8 
+},
+"id": 10 
+} 
+] 
+} 
+} 
+];
+ 
+ 		var map;
+ 		// set up the map
+ 		map = new L.Map('map', scrollWheelZooom=false);
+ 		var ajaxRequest;
+ 		var plotlist;
+ 		var plotlayers=[];
+ 
+ 		$(document).ready(function(){
+ 			$('#map').height($(window).height()-20);
+ 	  		$('#map').width($(window).width()-20);
+ 			initmap();
+ 		});
+ 
+ 		$(window).resize(function(){
+ 			$('#map').val('');
+ 			$('#map').height($(window).height()-20);
+ 	  		$('#map').width($(window).width()-20);
+ 			
+ 		});
+ 		function initmap() {
+ 			
+ 
+ 			// create the tile layer with correct attribution
+ 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+ 			var osmAttrib='Map data © OpenStreetMap contributors';
+ 			var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 19, attribution: osmAttrib});		
+ 
+ 			baseLayer = {
+  				"Base": osm
+  			}
+ 			// start the map in South-East England
+ 			map.setView(new L.LatLng(38.9996881944127, -104.962604677584), 8);
+ 			map.addLayer(osm);	
+ 
+ 			var layers={};
+ 			$.each(geoJSONSet, function(i, item){
+  				//add the geo points
+  				switch(item.data.features[0].geometry.type){
+  					case "Point":
+ 		 				layers[item.layer]=L.geoJson(item.data, { 
+ 	 						pointToLayer: function(feature, latlng){
+ 								return L.circleMarker(latlng, {
+ 								radius: feature.properties.size,
+ 								fillColor: feature.properties.color,
+ 								color: "#000",
+ 								weight: 1,
+ 								opacity: 1,
+ 								fillOpacity: 0.8
+ 								}).bindPopup(feature.properties.popupContent);		
+ 							}		
+ 		 					});
+ 		 			break;
+ 		 			case "LineString": 
+ 		 				layers[item.layer]=L.geoJson(item.data, { 
+ 	 						onEachFeature: function(feature, layer){
+ 								return L.polyline(feature.geometry.coordinates, {
+ 								color: feature.properties.color
+ 							});	
+ 		 					}		
+ 		 				});			
+ 		 			break;	
+ 		 		}	
+  			});
+ 			//add the layers to the map
+ 			layerControl = 	L.control.layers(baseLayer, layers, {
+  				collapsed: false
+  			});
+  			layerControl.addTo(map);
+  			$.each(layers, function(i, item){
+   				map.addLayer(item);
+   			});
+  			L.control.scale().addTo(map);
+ 			
+ 		}
+ 
+ 
+ 
+ 	</script>
+ </body>
