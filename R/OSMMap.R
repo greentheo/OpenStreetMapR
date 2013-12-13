@@ -7,7 +7,7 @@
 #' @param lat indicates the column name of the df that gives the latitude of points or lines.
 #' @param long indicates the column name of the df that gives the latitude of the points lines.
 #' @param size indicates which column in the df gives the size of the marker, automatically scaled.
-#' @param color indicates which column of the df gives the color, must be valid hex colors.
+#' @param color indicates a column in the df which can be factored and split on for colors
 #' @param popup indicates which column of the df provides text to place in the onClick popup for each map marker.
 #' @param line indicates the column of the df that gives the line label for interpreting sequential points as a line rather than many markers. 
 #' @param layer name for the layer to appear on the OSMMap Plot. 
@@ -29,23 +29,28 @@
 #' @export 
 #' @import RJSONIO
 #' @title OSMMap
-OSMMap = function(df, ..., lat="lat", long="long", size=8, color="#00FFFF",popup='', line=NULL, layer="layer1"){
+OSMMap = function(df, ..., lat="lat", long="long", size=8, color='noCol',popup='', line=NULL, layer="layer1"){
    if(size %in% colnames(df)){
      size = df[,size]
    }else{
      size = rep(size, nrow(df))
    }
    if(color %in% colnames(df)){
-     colors = df[,color]
+     #if you are using hex colors R appends an alpha (8 hex characters), 
+     #only want the first 6
+     cols=rainbow(length(unique(df[[color]])))
+     cols = sapply(cols, function(x){
+       return(paste(strsplit(x=as.character(x), split='')[[1]][1:7], sep='',collapse=''))
+     })
+     facdf = data.frame(colorVar=unique(df[[color]]), cols=cols)
+     df[["colorVar"]] = df[[color]]
+     df = merge(df, facdf, by="colorVar")
+     
+     colors = df$cols
+     
    }else{
-     colors = rep(color, nrow(df))
+     colors = rep("#000000", nrow(df))
    }
-   
-   #if you are using hex colors R appends an alpha (8 hex characters), 
-   #only want the first 6
-   colors = sapply(colors, function(x){
-     return(paste(strsplit(x=as.character(x), split='')[[1]][1:7], sep='',collapse=''))
-   })
    
    if(popup %in% colnames(df)){
      popup = df[,popup]

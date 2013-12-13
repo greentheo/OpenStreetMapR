@@ -1,7 +1,7 @@
 library(OpenStreetMapR)
 #generate rand lats and longs near Denver,CO
 df = data.frame(lat=runif(10, 38,40), long=-runif(10, 104,106), 
-                size=runif(10)*20, color=sample(rainbow(3), 10, replace=TRUE),
+                size=runif(10)*20, color=sample(letters[1:3], 10, replace=TRUE),
                 line=sample(1:3, 10,replace=TRUE))
 #base plot
 plot(OSMMap(df))
