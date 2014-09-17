@@ -1,4 +1,9 @@
-
+<head>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+</head>
 
 
 Test Plots with RMarkdown and OpenStreetMapR
@@ -10,6 +15,9 @@ Let's take a look at a dataset.
 
 ```{r }
 library(OpenStreetMapR)
+library(htmltools)
+library(knitr)
+library(ggplot2)
 df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
                 size=runif(100)*20, color=sample(rainbow(10), 100, replace=T))
 
@@ -24,9 +32,36 @@ You can plot this in a window easily with
 ```
 
 
-But you can also include this data as part of your RMarkdown just as easily, just print the OSMap object and make sure to turn on: .
+But you can also include this data as part of your RMarkdown just as easily, just print the OSMap object and make sure to turn off echo and results="asis"
 
-```{r echo=FALSE, results='asis'}
-(print(OSMMap(df, size='size', color='color')))
 
+```{r echo=FALSE,results='asis'}
+
+print(OSMMap(df, size='size', color='color'))
+
+```
+
+And another map
+
+```{r echo=FALSE,results='asis',eval=TRUE}
+counties = map_data("county")
+df = data.frame(state="colorado", county=unique(counties[counties$region=='colorado',"subregion"]),
+                metric=runif(64)
+)
+choroMapRed = choroplethMap(df, state='state', county='county',plotVariable='metric',palette = 'red', layerName='Red Layers')
+
+print(choroMapRed, 
+     title = 'A Random coloring of Counties',
+     subtitle = 'With Red, Blue and Green Color scales',
+     desc='The colors range from white to dark, darker = higher level of metrics.')
+
+
+#and one at the township level
+twp = readRDS('~/githubrepo//OpenStreetMapR/inst/OK.rds')
+df = data.frame(township=sample(unique(twp$region), 5),
+                metric=sample(1:4, 5, replace = T)
+)
+
+choroMapRed = choroplethMap(df, state=NULL,township='township',plotVariable='metric',palette = 'red', layerName='Red Township Layers')
+print(choroMapRed)
 ```

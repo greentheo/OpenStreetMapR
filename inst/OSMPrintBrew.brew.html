@@ -1,44 +1,111 @@
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<style>
+   .legend {
+      line-height: 18px;
+      color: #555;
+  }
+  .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+  }
+  .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+  }
+  .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+  }
+</style>
+<div id='OSMMapID'></div>
+<script>
 
-  <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+		var geoJSONSetOSMMapID = theRgeneratedgeoJSON;
+    
+    var title='RgeneratedTitle';
+    var subTitle = 'RgeneratedSubTitle';
+    var desc = 'RgeneratedDesc';
+    
+    //var legendJSON = theRgeneratedLegendJSON;
+    
+    //var titleJSON = theRgeneratedTitleJSON;
+    var mapOSMMapID;
+  	// set up the map
+		mapOSMMapID = new L.Map('OSMMapID', scrollWheelZooom=false);
+		var ajaxRequestOSMMapID;
+		var plotlistOSMMapID;
+		var plotlayersOSMMapID=[];
+    
+    var loadedOSMMapID = false;
+		
 
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    //rolloverBox for information
+    var rolloverBoxOSMMapID = L.control({position: 'bottomleft'});
 
-
-
-	<div id="OSMMapID"></div>
-
-
-	<script>
-
-
-
-		var geoJSONSet = theRgeneratedgeoJSON;
-		var map;
-		// set up the map
-		map = new L.Map('map', scrollWheelZooom=false);
-		var ajaxRequest;
-		var plotlist;
-		var plotlayers=[];
-
+    rolloverBoxOSMMapID.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update("<h4>Map Information</h4>");
+        return this._div;
+    };
+    // method that we will use to update the control based on feature properties passed
+    rolloverBoxOSMMapID.update = function (props) {
+      this._div.innerHTML = props;
+    };
+    rolloverBoxOSMMapID.addTo(mapOSMMapID);
 		var mapID="#OSMMapID";
 
 		$(document).ready(function(){
-			$('#map').height($(window).height()-20);
-	  		$('#map').width($(window).width()-20);
-			initmap();
+			$('#OSMMapID').height($(window).height()*.5);
+      
+	  		$('#OSMMapID').width(document.getElementById("OSMMapID").parentNode.offsetWidth-40);
+			initmapOSMMapID();
 		});
 
 		$(window).resize(function(){
-			$('#map').val('');
-			$('#map').height($(window).height()-20);
-	  		$('#map').width($(window).width()-20);
+			$('#OSMMapID').val('');
+			$('#OSMMapID').height($(window).height()*.5);
+	  		$('#OSMMapID').width(document.getElementById("OSMMapID").parentNode.offsetWidth-40);
 			
 		});
-		function initmap() {
-			
+        function highlightFeatureOSMMapID(e) {
+      var layer = e.target;
 
+      layer.setStyle({
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+      });
+  
+      if (!L.Browser.ie && !L.Browser.opera) {
+          layer.bringToFront();
+      }
+      //set the text in the rolloverBox
+     rolloverBoxOSMMapID.update(layer.feature.properties.popupContent);
+    }
+    function resetHighlight(e) {
+      var layer = e.target;
+      layer.setStyle({
+          color: e.target.feature.properties.color,
+          opacity: .6,
+          fillOpacity: .5,
+          weight: 5
+      });
+    }
+    function zoomToFeatureOSMMapID(e) {
+        mapOSMMapID.fitBounds(e.target.getBounds());
+        //set the text in the rolloverBox
+        rolloverBox.update(layer.feature.properties.popupContent);
+    }
+		function initmapOSMMapID() {
+		
+      
 			// create the tile layer with correct attribution
 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			var osmAttrib='Map data © OpenStreetMap contributors';
@@ -48,11 +115,11 @@
  				"Base": osm
  			}
 			// start the map in South-East England
-			map.setView(new L.LatLng(mapCenterLat, mapCenterLong), mapZoomLevel);
-			map.addLayer(osm);	
+			mapOSMMapID.setView(new L.LatLng(mapCenterLat, mapCenterLong), mapZoomLevel);
+			mapOSMMapID.addLayer(osm);	
 
 			var layers={};
-			$.each(geoJSONSet, function(i, item){
+			$.each(geoJSONSetOSMMapID, function(i, item){
  				//add the geo points
  				switch(item.data.features[0].geometry.type){
  					case "Point":
@@ -70,26 +137,76 @@
 		 					});
 		 			break;
 		 			case "LineString": 
-		 				layers[item.layer]=L.geoJson(item.data, { 
+  	 				layers[item.layer]=L.geoJson(item.data, { 
 	 						onEachFeature: function(feature, layer){
 								return L.polyline(feature.geometry.coordinates, {
-								color: feature.properties.color
 							});	
-		 					}		
+		 					},
+              style: function(feature){
+                return {color: feature.properties.color,
+                        opacity: .75,
+                        fillOpacity: .75};
+              }  				
 		 				});			
 		 			break;	
+          case "Polygon": 
+  	 				layers[item.layer]=L.geoJson(item.data, { 
+	 						onEachFeature: function(feature, layer){
+                 if(feature.properties.static=="false"){
+                  layer.on({
+                  mouseover: highlightFeatureOSMMapID,
+                  mouseout: resetHighlight,
+                  click: zoomToFeatureOSMMapID 
+                })
+                }
+								return L.polygon(feature.geometry.coordinates, {
+								
+							});	
+		 					},
+              style: function(feature){
+                return {color: feature.properties.color,
+                        opacity: .6,
+                        fillOpacity: .5};
+              }  				
+		 				});			
+		 			break;
 		 		}	
  			});
+       
+         //Add a title box
+        var info = L.control({position: 'topright'});
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = '<h3>'+title+'</h3><h4>'+subTitle+'</h4><p>'+desc+'</p>'
+        };
+
+        info.addTo(mapOSMMapID);
+        
 			//add the layers to the map
 			layerControl = 	L.control.layers(baseLayer, layers, {
  				collapsed: false
  			});
- 			layerControl.addTo(map);
+ 			layerControl.addTo(mapOSMMapID);
  			$.each(layers, function(i, item){
-  				map.addLayer(item);
+  				mapOSMMapID.addLayer(item);
   			});
- 			L.control.scale().addTo(map);
+ 			L.control.scale().addTo(mapOSMMapID);
 			
+      loadedOSMMapID = true;
+      console.log('Map has been initialized')
 		}
+    
+    window.setTimeout(function(){
+      if(!loadedOSMMapID){
+        initmapOSMMapID();
+      }
+    }, 1000);
 
 	</script>

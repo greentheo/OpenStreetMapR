@@ -12,7 +12,31 @@
 	
 
 </head>
-
+<style>
+   .legend {
+      line-height: 18px;
+      color: #555;
+  }
+  .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+  }
+  .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+  }
+  .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+  }
+</style>
 <body>
 	<div id="map"></div>
 
@@ -21,6 +45,14 @@
 
 
 		var geoJSONSet = theRgeneratedgeoJSON;
+    
+    var title='RgeneratedTitle';
+    var subTitle = 'RgeneratedSubTitle';
+    var desc = 'RgeneratedDesc';
+    
+    //var legendJSON = theRgeneratedLegendJSON;
+    
+    //var titleJSON = theRgeneratedTitleJSON;
 
 		var map;
 		// set up the map
@@ -28,19 +60,63 @@
 		var ajaxRequest;
 		var plotlist;
 		var plotlayers=[];
+    
+    //rolloverBox for information
+    var rolloverBox = L.control({position: 'bottomleft'});
+
+    rolloverBox.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update("<h4>Map Information Box</h4>");
+        return this._div;
+    };
+    // method that we will use to update the control based on feature properties passed
+    rolloverBox.update = function (props) {
+      this._div.innerHTML = props;
+    };
+    rolloverBox.addTo(map);
 
 		$(document).ready(function(){
-			$('#map').height($(window).height()-20);
+			$('#map').height($(window).height()-40);
 	  		$('#map').width($(window).width()-20);
 			initmap();
 		});
 
 		$(window).resize(function(){
 			$('#map').val('');
-			$('#map').height($(window).height()-20);
+			$('#map').height($(window).height()-40);
 	  		$('#map').width($(window).width()-20);
 			
 		});
+    function highlightFeature(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+      });
+  
+      if (!L.Browser.ie && !L.Browser.opera) {
+          layer.bringToFront();
+      }
+      //set the text in the rolloverBox
+    rolloverBox.update(layer.feature.properties.popupContent);
+    }
+    function resetHighlight(e) {
+      var layer = e.target;
+      layer.setStyle({
+          color: e.target.feature.properties.color,
+          opacity: .6,
+          fillOpacity: .5,
+          weight: 5
+      });
+      //set the text in the rolloverBox
+    rolloverBox.update();
+    }
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+    }
 		function initmap() {
 			
 
@@ -74,26 +150,89 @@
 							}		
 		 					});
 		 			break;
+           //todo get the line and fill color straightened out and assigned properly
 		 			case "LineString": 
 		 				layers[item.layer]=L.geoJson(item.data, { 
 	 						onEachFeature: function(feature, layer){
 								return L.polyline(feature.geometry.coordinates, {
-								color: feature.properties.color
 							});	
-		 					}		
+		 					},
+              style: function(feature){
+                return {color: feature.properties.color,
+                        opacity: .6,
+                        fillOpacity: .5};
+              }  				
 		 				});			
 		 			break;	
+          case "Polygon": 
+  	 				layers[item.layer]=L.geoJson(item.data, { 
+	 						onEachFeature: function(feature, layer){
+                 if(feature.properties.static=="false"){
+                 layer.on({
+                  mouseover: highlightFeature,
+                  mouseout: resetHighlight,
+                  click: zoomToFeature
+                })
+                 }
+								return L.polygon(feature.geometry.coordinates, {
+							});	
+		 					},
+              style: function(feature){
+                return {color: feature.properties.color,
+                        opacity: .75,
+                        fillOpacity: .75};
+              }  				
+		 				});			
+		 			break;
 		 		}	
  			});
-			//add the layers to the map
-			layerControl = 	L.control.layers(baseLayer, layers, {
- 				collapsed: false
- 			});
- 			layerControl.addTo(map);
- 			$.each(layers, function(i, item){
-  				map.addLayer(item);
+			   //Add a title box
+        var info = L.control({position: 'topright'});
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = '<h3>'+title+'</h3><h4>'+subTitle+'</h4><p>'+desc+'</p>'
+        };
+
+        info.addTo(map);
+
+   		//add the layers to the map
+ 			layerControl = 	L.control.layers(baseLayer, layers, {
+  				collapsed: false
   			});
- 			L.control.scale().addTo(map);
+  			layerControl.addTo(map);
+  			$.each(layers, function(i, item){
+          item.setStyle
+   				map.addLayer(item);
+   			});
+  			L.control.scale().addTo(map);
+        
+        /*
+        var legend = L.control({position: 'bottomright'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+                labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + '#000' + '"></i> Here is some Text to print<br>' ;
+            }
+
+            return div;
+        };
+
+        legend.addTo(map);
+     		*/
 			
 		}
 
