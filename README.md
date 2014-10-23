@@ -39,6 +39,7 @@ plot(linePlot)
 
 ```
 
+
 Creating a layered Map
 ----------------------
 

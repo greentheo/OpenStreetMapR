@@ -1,5 +1,5 @@
 #' OpenStreetMap Mapping utility
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy theo@@royaltyanalytics.com
 #' @description The base level function for creating an interactive map with Open Street Maps
 #' @usage OSMMap(df, ..., lat="lat", long="long", size=8, color="#00FFFF",popup='', group=NULL, layer="layer1")
 #' @param df is a dataFrame containing (at the least) two features called "lat" and "long"
@@ -153,7 +153,7 @@ OSMMap = function(df, ..., lat="lat", long="long", size=8, color='noCol',popup='
 }
 
 #' OpenStreetMap Layer adding function
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description Take two maps and mesh them so that the markers are on different layers
 #' @usage addLayers(OSMMap1, OSMMap2)
 #' @param OSMMap1 a map object resulting from the call to OSMMap
@@ -200,7 +200,7 @@ addLayers = function(OSMMap1, OSMMap2){
 
 
 #' OpenStreetMap State and county level choropleth shape creating function
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description Takes a df with a column marked for state and makes a choropleth plot for it with the color specified.
 #' @usage choroplethMap(df, state, plotVariable,...,county, color)
 #' @param state the name of the column in the df that provides the state name in full state name format (e.g. colorado)
@@ -214,7 +214,7 @@ addLayers = function(OSMMap1, OSMMap2){
 #' counties = choroplethMap(df, 'state', 'county')
 #' }
 #' @export 
-#' @import RJSONIO, maps
+#' @import RJSONIO maps
 #' @title choroplethMap
 choroplethMap = function(df, state='state', plotVariable=NULL, ...,county=NULL, township=NULL, 
                          color=NULL, palette='red', layerName='layer',townshipData=NULL){

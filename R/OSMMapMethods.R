@@ -1,7 +1,7 @@
 #print <- function(OSMMap) UseMethod("print")
 
 #' OpenStreetMap Printing (for use in RHTML or RMarkDown reports)
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description print the OSMMap Object to it's corresponding HTML/JS code.
 #' @usage print.OSMMap(x,...)
 #' @aliases print
@@ -37,7 +37,7 @@ print.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https:/
 }
 
 #' OpenStreetMap Internal Function
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description Check to the see if the R server is running.
 #' @usage isServerRunning()
 #' @export 
@@ -48,7 +48,7 @@ isServerRunning <- function() {
 }
 
 #' OpenStreetMap Internal Function for handling http requests
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description Setup the R webserver properly.
 #' @usage OSMMap.httpd.handler(path, query,...)
 #' @param path a path to run the webserver in
@@ -69,7 +69,7 @@ OSMMap.httpd.handler <- function(path, query,...) {
 #plot <- function(OSMMap) UseMethod("plot")
 
 #' OpenStreetMap Plotting for standalone usage.
-#' @author Theo Van Rooy <theo@royaltyanalytics.com>
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
 #' @description Plot the OSMMap Object on an HTML page and display it.
 #' @usage plot.OSMMap(x,...)
 #' @aliases plot
