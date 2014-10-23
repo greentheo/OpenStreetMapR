@@ -6,44 +6,142 @@
 </head>
 
 
-Test Plots with RMarkdown and OpenStreetMapR
-========================================================
+# OpenStreetMapR an R interface to Leaflet
+
+<a href="royaltyanalytics.com"><img src="images/RA-logo-color-web.jpg" style="max-height:80px;"></a>
+
+#### Created by [Royalty Analytics](http://royaltyanalytics.com)
+
+GitHub Project page link:
+----------------
+https://github.com/greentheo/OpenStreetMapR
+
+
+A Cool Example
+--------------
+
+Here's a neat example to start with: 
+
+```{r echo=FALSE}
+library(OpenStreetMapR)
+library(htmltools)
+library(knitr)
+library(ggplot2)
+```
+
+```{r echo=TRUE, results='asis'}
+df = data.frame(state=sample(unique(map_data("state")$region), 49,replace=F),
+                metric=runif(49)
+)
+
+#choropleth by state with custom colors assigned to the state
+df[["hexColor"]]=sample(rgb(runif(10), runif(10), runif(10)), nrow(df), replace = T)
+choroMap = choroplethMap(df, state='state', plotVariable='metric', color="hexColor", layerName = 'States')
+
+#over lay some points and lines
+df = data.frame(lat=runif(100, 30,50), long=-runif(100, 70,120), 
+                size=runif(100)*20, color=sample(letters[1:3], 100, replace=TRUE),
+                group=sample(1:3, 100,replace=TRUE),
+                greys=gray(seq(0,1,length.out=100)))
+
+pointPlot = OSMMap(df, color='greys', size='size', layer = 'Points',colorByFactor = F)
+
+print(addLayers(choroMap, pointPlot))
+
+```
+
+
+
+Plots with RMarkdown and OpenStreetMapR
+-------------------
 
 Open StreetMapR is designes to work either interactively with plots or interactively within an RMarkdown document.  Reporting and reproducible research at it's best!
 
-Let's take a look at a dataset.
+This page is (mostly) generated from the RMarkdown @ inst/examples/RMrkdownExample.Rmd inside the package. Start there for a feel for how OpenStreetMapR works in Rmd.
 
-```{r }
+There's also a shiny app in the inst/examples/shinyApp folder which makes use of the package.  Check it out.
+
+### Package loading and dataset creation
+
+First let's take a look at a dataset.
+
+```{r echo=TRUE, eval=FALSE}
 library(OpenStreetMapR)
 library(htmltools)
 library(knitr)
 library(ggplot2)
 df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
-                size=runif(100)*20, color=sample(rainbow(10), 100, replace=T))
+                size=runif(100)*20, color=sample(rainbow(10), 100, replace=T),
+                popup=rep(sample(letters, 10),100))
 
 head(df)
 ```
 
-You can plot this in a window easily with
 
-```{r echo=TRUE}
-#plot(OSMMap(df)
-#plot(OSMMap(df, size='size', color='color'))
+### Plot in seperate browser window
+
+You can plot this in it's own window easily with traditional R plot interface
+
+```{r echo=TRUE, eval=FALSE}
+plot(OSMMap(df))
+plot(OSMMap(df, size='size', color='color'))
 ```
 
 
-But you can also include this data as part of your RMarkdown just as easily, just print the OSMap object and make sure to turn off echo and results="asis"
+### Include in RMarkdown
+
+But you can also include this data as part of your RMarkdown just as easily, just print the OSMap object and make sure to turn off echo and results="asis".
+
+There are also extended print options to control Titles and subtitles.
+
+
+```{r echo=TRUE,results='asis', eval=FALSE}
+
+### This code block is just to show what the next inline plot is generated from.
+print(OSMMap(df, size='size', color='color', popup='popup'))
+print(OSMMap(df, size='size', color='color'), 
+      title='OpenStreetMapR',
+      subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',
+      desc='',
+      returnText=F)
+
+```
+
 
 
 ```{r echo=FALSE,results='asis'}
 
-print(OSMMap(df, size='size', color='color'))
+print(OSMMap(df, size='size', color='color', popup='popup'))
+# print(OSMMap(df, size='size', color='color'), 
+#       title='OpenStreetMapR',
+#       subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',
+#       desc='',
+#       returnText=F)
 
 ```
 
-And another map
 
-```{r echo=FALSE,results='asis',eval=TRUE}
+### Shiny Apps
+
+Including this in a shiny app is just as easy, but now you'll have to inject the results into a renderHTML ui object and set returnText=T.
+
+A load of HTML text will be returned.
+
+```{r echo=TRUE, eval=FALSE}
+
+print(OSMMap(df, size='size', color='color'), 
+      title='OpenStreetMapR',
+      subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',
+      desc='',
+      returnText=T)
+
+```
+
+### Choropleth Maps
+
+Choropleth maps are straight forward.
+
+```{r echo=TRUE,results='asis',eval=TRUE}
 counties = map_data("county")
 df = data.frame(state="colorado", county=unique(counties[counties$region=='colorado',"subregion"]),
                 metric=runif(64)
@@ -55,13 +153,71 @@ print(choroMapRed,
      subtitle = 'With Red, Blue and Green Color scales',
      desc='The colors range from white to dark, darker = higher level of metrics.')
 
+```
 
+Even at the township level (Kansas and Oklahoma data included...roll your own for other states).
+
+A selection of 100 twps across KS and OK.
+
+```{r echo=TRUE, results='asis'}
 #and one at the township level
 twp = readRDS('~/githubrepo//OpenStreetMapR/inst/OK.rds')
-df = data.frame(township=sample(unique(twp$region), 5),
+df = data.frame(township=sample(unique(twp$region), 100),
                 metric=sample(1:4, 5, replace = T)
 )
 
-choroMapRed = choroplethMap(df, state=NULL,township='township',plotVariable='metric',palette = 'red', layerName='Red Township Layers')
+choroMapRed = choroplethMap(df, state=NULL,township='township',plotVariable='metric',palette = 'red', layerName='Red Township Layers',townshipData = twp)
 print(choroMapRed)
+
 ```
+
+### And Beyond
+
+So are polygon maps:
+
+```{r echo=TRUE, results='asis'}
+#generate rand lats and longs in Colorado
+df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
+                size=runif(100)*20, color=sample(letters[1:3], 100, replace=TRUE),
+                group=sample(1:3, 100,replace=TRUE))
+
+polyPlot = OSMMap(df, group='group', color='color', groupType="Polygon")
+print(polyPlot)
+```
+
+Adding seperate maps into a multi layered map is also straightforward.  Let's do a choropleth of Denver and Nebraska with some points laid on top and lines connecting them.
+
+
+```{r echo=TRUE, results='asis'}
+#generate rand lats and longs in Colorado and New Mexico
+df = data.frame(lat=runif(100, 33,41), long=-runif(100, 102,108), 
+                size=runif(100)*20, color=sample(letters[1:3], 100, replace=TRUE),
+                group=sample(1:3, 100,replace=TRUE))
+dfState = data.frame(state=c('colorado','new mexico'), metric=c(1,2))
+
+linePlot = OSMMap(df, group='group', color='color', groupType="LineString", layer='Lines')
+pointPlot = OSMMap(df, color='color', size='size', layer = 'Points')
+choroPlot = choroplethMap(dfState, state='state',plotVariable = 'metric', layerName = 'States', static=T)
+comboPlot = addLayers(choroPlot, 
+                addLayers(linePlot, pointPlot ))
+print(comboPlot)
+```
+
+The OSMMap function can also have a single color applied to points, lines and polygons, or it can have a vector of points specified.  It will (sort of)  figure it out.  
+
+```{r echo=TRUE, results='asis'}
+#generate rand lats and longs in Colorado and New Mexico
+
+pointPlot = OSMMap(df, color='#FF0000', size='size', layer = 'Points',colorByFactor = F)
+print(pointPlot)
+
+df[["greys"]] = gray(seq(0,1,length.out=100))
+pointPlot = OSMMap(df, color='greys', size='size', layer = 'Points',colorByFactor = F)
+print(pointPlot)
+
+```
+
+
+### Please do contribute and share your examples!
+
+This is a work in progress and we'd love to have your input!  

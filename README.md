@@ -28,18 +28,6 @@ OSMMap(df)
 OSMMap(df, size='size', color='color')
 ```
 
-Making Line Plots
------------------
-
-You can also plot lines if you have an additional column in the df which denotes the line grouping.
-
-```javascript
-linePlot = OSMMap(df, line='line')
-plot(linePlot)
-
-```
-
-
 Creating a layered Map
 ----------------------
 
@@ -62,3 +50,5 @@ You can also include the plots as part of R HTML and knitr with the following:
 end.rcode-->
 ```
  
+For more usage examples see 'package/inst/examples/'  or take a look at this page http://greentheo.github.io/openstreetmapr .
+
