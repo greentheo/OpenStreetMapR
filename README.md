@@ -50,5 +50,5 @@ print(OSMMap(df, size='size', color='color'))
 
 ```
  
-For more usage examples see 'package/inst/examples/'  or take a look at this page http://greentheo.github.io/openstreetmapr/ .
+For more usage examples see 'package/inst/examples/'  or take a look at this page http://greentheo.github.io/OpenStreetMapR/ .
 
