@@ -147,7 +147,8 @@ OSMMap = function(df, ..., lat="lat", long="long", size=8, color='noCol',popup='
    
    
    geoJSON = toJSON(geoList) 
-   output=list(geoList=geoList, geoJSON=geoJSON, zoom=zoom, mapCenterLat=mapCenterLat, mapCenterLong=mapCenterLong)
+   allList = list(geoJSON=geoJSON, geoList=geoList, zoom=zoom, mapCenterLat=mapCenterLat, mapCenterLong=mapCenterLong)
+   output=list(geoList=geoList, allList=allList, geoJSON=geoJSON, zoom=zoom, mapCenterLat=mapCenterLat, mapCenterLong=mapCenterLong)
    class(output)="OSMMap"
    return(output)
 }
@@ -333,5 +334,5 @@ randomData = function(){
 #' @title geoJSON
 geoJSON = function(OSMMap){
   ##generate some random Data frame
-  return(OSMMap$geoList)
+  return(OSMMap$allList)
 }

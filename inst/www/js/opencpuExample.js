@@ -10,7 +10,9 @@ $(document).ready(function(){
       ocpu.call('geoJSON', {OSMMap: mapSession},function(geoSession){
         geoSession.getObject(function(data){
           console.log(data);
-          leafletMap(data.geoJSON, $('#theOSMContainer'), 'mainMap');
+          leafletMap( 'theOSMContainer', JSON.parse(data.geoJSON), 'mainMap', 
+                      data.zoom[0], data.mapCenterLat[0], data.mapCenterLong[0],
+                      'My Awesome Map', 'So Cool!', "It's a really cool map");
         });
       });
     });

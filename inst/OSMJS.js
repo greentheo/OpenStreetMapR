@@ -1,20 +1,18 @@
 //some javascript to load up on a page if you are using something like opencpu
 
-leafletMap = function(injectDiv, geoJSon, mapID){
-  console.log(injectDiv);
+leafletMap = function(injectDivID, geoJSon, mapID, zoom, mapCenterLat, mapCenterLong, 
+                      title, subTitle, desc){
+    var injectDiv = $('#'+injectDivID);
   
     var geoJSONSetOSMMapID = geoJSon;
     
-    var title='A Title';
-    var subTitle = 'SubTitle';
-    var desc = 'Desc';
     
     //var legendJSON = theRgeneratedLegendJSON;
     
     //var titleJSON = theRgeneratedTitleJSON;
     var mapOSMMapID;
   	// set up the map
-		mapOSMMapID = new L.Map(mapID, scrollWheelZooom=false);
+		mapOSMMapID = new L.Map(injectDivID, scrollWheelZooom=false);
 		var ajaxRequestOSMMapID;
 		var plotlistOSMMapID;
 		var plotlayersOSMMapID=[];
@@ -40,24 +38,25 @@ leafletMap = function(injectDiv, geoJSon, mapID){
 		$(document).ready(function(){
 			injectDiv.height($(window).height()*.5);
       //attention here ****
-	  		injectDiv.width(document.getElementById(mapID).parentNode.offsetWidth-40);
-			initmapOSMMapID();
+	  		injectDiv.width(document.getElementById(injectDivID).parentNode.offsetWidth-40);
+			  initmapOSMMapID(mapOSMMapID, zoom, mapCenterLat, mapCenterLong,geoJSONSetOSMMapID,
+                        title, subTitle, desc);
 		});
 
 		$(window).resize(function(){
 		injectDiv.val('');
 			injectDiv.height($(window).height()*.5);
-      //attention here******
-	  		injectDiv.width(document.getElementById(mapID).parentNode.offsetWidth-40);
+      
+	  		injectDiv.width(document.getElementById(injectDivID).parentNode.offsetWidth-40);
 			
 		});
        
-    
+    /*
     window.setTimeout(function(){
       if(!loadedOSMMapID){
         initmapOSMMapID();
       }
-    }, 1000);
+    }, 1000);*/
   
 }
  function highlightFeatureOSMMapID(e) {
@@ -90,7 +89,8 @@ leafletMap = function(injectDiv, geoJSon, mapID){
         //set the text in the rolloverBox
         rolloverBox.update(layer.feature.properties.popupContent);
     }
-  	function initmapOSMMapID() {
+  	function initmapOSMMapID(mapOSMMapID, mapZoomLevel, mapCenterLat, mapCenterLong,
+                            geoJSONSetOSMMapID, title, subTitle, desc) {
 		
       
 			// create the tile layer with correct attribution
