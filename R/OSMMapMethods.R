@@ -131,3 +131,17 @@ plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://
  
 }
 
+#' OpenStreetMap return json for plotting in opencpu or other.
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
+#' @description Return the geoJSON component of the OSMMap.
+#' @usage asJSON.OSMMap(x,...)
+# @aliases as.JSON
+# @method as.JSON OSMMap
+# @S3method OSMMap asJSON
+#' @param x is an OSMMap object resulting from the call to OSMMap or addLayers
+#' @export 
+#' @title asJSON.OSMMap
+#' 
+as.JSON.OSMMap <- function(x){
+  return(x$geoJSON)
+}

@@ -311,3 +311,27 @@ subGridChoropleth = function(){
   #this function lets you divide up the state or county into evenly sized grids for plotting information.
   
 }
+#' Create some random data to plot.
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
+#' @description generates random data for the openCPU example
+#' @usage randomData()
+#' @export 
+#' @title randomData
+randomData = function(){
+  ##generate some random Data frame
+  df = data.frame(lat=runif(100, 38,40), long=-runif(100, 104,106), 
+                  size=runif(100)*20, color=sample(letters[1:3], 100, replace=TRUE),
+                  group=sample(1:3, 100,replace=TRUE))
+  return(df)
+}
+
+#' Return just the geoJSon data from the object.
+#' @author Theo Van Rooy <theo@@royaltyanalytics.com>
+#' @description returns just the geoJSON data for the plot
+#' @usage geoJSON(OSMMap)
+#' @export 
+#' @title geoJSON
+geoJSON = function(OSMMap){
+  ##generate some random Data frame
+  return(OSMMap$geoList)
+}
