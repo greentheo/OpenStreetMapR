@@ -284,7 +284,8 @@ choroplethMap = function(df, state='state', plotVariable=NULL, ...,county=NULL, 
     if(is.null(county)){
       statemap = data.frame(map_data('state'))
       dfmerge = data.frame(region=(states), metric=plotVar, color=colors)
-      newDF = merge(statemap, dfmerge,by='region',)
+      colnames(dfmerge) = c("region", "metric", "color")
+      newDF = merge(statemap, dfmerge,by='region')
       newDF = newDF[with(newDF, order(order)), ]
       newDF[["popup"]] = paste(newDF$region, newDF$metric, sep=" ") 
       return(OSMMap(newDF, group='group', color='color', popup='popup',groupType="Polygon",colorByFactor = F, layer=layerName))  
