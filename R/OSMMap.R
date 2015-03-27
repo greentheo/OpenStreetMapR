@@ -223,7 +223,9 @@ choroplethMap = function(df, state='state', plotVariable=NULL, ...,county=NULL, 
     if(plotVariable %in% colnames(df)){
       plotVar=df[,plotVariable]
       plotVarNorm = (plotVar-min(plotVar))/(max(plotVar)-min(plotVar))
-      
+      if(class(plotVarNorm)=="data.frame"){
+        plotVarNorm = as.numeric(plotVarNorm[,1])
+      }
       if(palette=='red'){
         colors = rgb(1, 1-plotVarNorm, 1-plotVarNorm)
       }
