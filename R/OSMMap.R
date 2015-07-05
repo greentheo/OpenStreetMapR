@@ -146,7 +146,7 @@ OSMMap = function(df, ..., lat="lat", long="long", size=8, color='noCol',popup='
    }
    
    
-   geoJSON = toJSON(geoList) 
+   geoJSON = toJSON(geoList,digits = 12) 
    allList = list(geoJSON=geoJSON, geoList=geoList, zoom=zoom, mapCenterLat=mapCenterLat, mapCenterLong=mapCenterLong)
    output=list(geoList=geoList, allList=allList, geoJSON=geoJSON, zoom=zoom, mapCenterLat=mapCenterLat, mapCenterLong=mapCenterLong)
    class(output)="OSMMap"
