@@ -85,6 +85,10 @@ OSMMap.httpd.handler <- function(path, query,...) {
 #' 
 plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',desc='', returnText=F){
   OSMMap=x
+  env <- get( ".httpd.handlers.env", asNamespace("tools"))
+  env[["OpenStreetMapR"]] <- OSMMap.httpd.handler    
+  root.dir <- tempdir()
+  
   ## Write the whole visualisation into a html file
   if('OSMMap' %in% class(OSMMap)){          
     ## Write the pure chart html code into a separate file
@@ -115,10 +119,7 @@ plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://
       tools::startDynamicHelp()
     }
     
-    env <- get( ".httpd.handlers.env", asNamespace("tools"))
-    env[["OpenStreetMapR"]] <- OSMMap.httpd.handler    
-    root.dir <- tempdir()
-    
+
     
     cat(html, file=file)
     #cat(html, file='inst/examples/testOutPut.html')
