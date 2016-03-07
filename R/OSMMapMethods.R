@@ -83,9 +83,10 @@ OSMMap.httpd.handler <- function(path, query,...) {
 #' @import tools
 #' @title plot.OSMMap
 #' 
-plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',desc=''){
+plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',desc='', returnText=F){
   OSMMap=x
-    if(!isServerRunning() ) {
+  
+    if(!isServerRunning() & !returnText) {
       #tools:::startDynamicHelp()
       tools::startDynamicHelp()
     }
@@ -110,6 +111,9 @@ plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://
       html = gsub('mapCenterLong', OSMMap$mapCenterLong, html)
       html = gsub('mapZoomLevel', OSMMap$zoom, html)  
       
+      if(returnText){
+        return(html)
+      }
       
       file <- file.path(root.dir, paste(mapID ,".html", sep=""))
     }else{## not an OSM object
