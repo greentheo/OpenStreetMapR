@@ -85,6 +85,30 @@ OSMMap.httpd.handler <- function(path, query,...) {
 #' 
 plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://github.com/greentheo/OpenStreetMapR/">Github Link</a>',desc='', returnText=F){
   OSMMap=x
+  ## Write the whole visualisation into a html file
+  if('OSMMap' %in% class(OSMMap)){          
+    ## Write the pure chart html code into a separate file
+    #html = readLines('inst//OSMPlotBrew.brew.html')
+    html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'),warn = F)
+    html = paste0(html, '\n')
+    mapID = paste0('OSMMap',round(runif(1)*10000))
+    html = gsub('OSMMapID',mapID, html)
+    html = gsub('theRgeneratedgeoJSON', OSMMap$geoJSON, html)
+    html = gsub('RgeneratedTitle', title, html)
+    html = gsub('RgeneratedSubTitle', subtitle, html)
+    html = gsub('RgeneratedDesc', desc, html)
+    html = gsub('mapCenterLat', OSMMap$mapCenterLat, html)
+    html = gsub('mapCenterLong', OSMMap$mapCenterLong, html)
+    html = gsub('mapZoomLevel', OSMMap$zoom, html)  
+    
+    if(returnText){
+      return(html)
+    }
+    
+    file <- file.path(root.dir, paste(mapID ,".html", sep=""))
+  }else{## not an OSM object
+    stop('This is not an OpenStreetMapR object!')
+  }    
   
     if(!isServerRunning() & !returnText) {
       #tools:::startDynamicHelp()
@@ -95,30 +119,7 @@ plot.OSMMap <- function(x,...,title='OpenStreetMapR',subtitle='<a href="https://
     env[["OpenStreetMapR"]] <- OSMMap.httpd.handler    
     root.dir <- tempdir()
     
-    ## Write the whole visualisation into a html file
-    if('OSMMap' %in% class(OSMMap)){          
-      ## Write the pure chart html code into a separate file
-      #html = readLines('inst//OSMPlotBrew.brew.html')
-      html = readLines(paste0(system.file(package='OpenStreetMapR'), '/OSMPlotBrew.brew.html'),warn = F)
-      html = paste0(html, '\n')
-      mapID = paste0('OSMMap',round(runif(1)*10000))
-      html = gsub('OSMMapID',mapID, html)
-      html = gsub('theRgeneratedgeoJSON', OSMMap$geoJSON, html)
-      html = gsub('RgeneratedTitle', title, html)
-      html = gsub('RgeneratedSubTitle', subtitle, html)
-      html = gsub('RgeneratedDesc', desc, html)
-      html = gsub('mapCenterLat', OSMMap$mapCenterLat, html)
-      html = gsub('mapCenterLong', OSMMap$mapCenterLong, html)
-      html = gsub('mapZoomLevel', OSMMap$zoom, html)  
-      
-      if(returnText){
-        return(html)
-      }
-      
-      file <- file.path(root.dir, paste(mapID ,".html", sep=""))
-    }else{## not an OSM object
-      stop('This is not an OpenStreetMapR object!')
-    }    
+    
     cat(html, file=file)
     #cat(html, file='inst/examples/testOutPut.html')
     
